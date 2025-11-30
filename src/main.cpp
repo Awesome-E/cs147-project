@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <SparkFunLSM6DSO.h>
 #include <Wire.h>
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
+// #include <BLEDevice.h>
+// #include <BLEUtils.h>
+// #include <BLEServer.h>
 #include <BleGamepad.h>
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
@@ -16,7 +16,7 @@
 #define JOYSTICK_SCALE_FACTOR 3
 
 LSM6DSO acc;
-BLECharacteristic *pCharacteristic;
+// BLECharacteristic *pCharacteristic;
 
 void initButtonPins() {
     pinMode(RED_BUTTON_PIN, INPUT);
@@ -65,7 +65,7 @@ BleGamepad gamepad;
 BleGamepadConfiguration config;
 
 void setupGamepad() {
-    gamepad = BleGamepad("MyESP32Gamepad", "ESP32", 100);
+    gamepad = BleGamepad("Micro Controller", "ESP32", 100);
     config = BleGamepadConfiguration();
     config.setWhichAxes(true, true, false, false, false, false, false, false); // X,Y only
     config.setButtonCount(15); // issues
