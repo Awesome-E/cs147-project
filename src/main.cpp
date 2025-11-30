@@ -12,6 +12,9 @@
 #define BLUE_BUTTON_PIN 15
 #define GREEN_BUTTON_PIN 13
 
+#define DEAD_ZONE_THRESHOLD 0.12
+#define JOYSTICK_SCALE_FACTOR 3
+
 LSM6DSO acc;
 BLECharacteristic *pCharacteristic;
 
@@ -83,6 +86,15 @@ void transmitGamepadData(int redPressed, int greenPressed, int bluePressed, floa
     if (bluePressed)  gamepad.press(10); else gamepad.release(10);
 
     // transmit axes - map range [-1.000, 1.000] to [0, 32767]
+    
+    if (abs(ax) < DEAD_ZONE_THRESHOLD) ax = 0; else {
+        // scale inputs to match physical joystick better
+        ax = (ax + (ax > 0 ? -DEAD_ZONE_THRESHOLD : DEAD_ZONE_THRESHOLD)) * JOYSTICK_SCALE_FACTOR;
+    }
+    if (abs(ay) < DEAD_ZONE_THRESHOLD) ay = 0; else {
+      ay = (ay + (ay > 0 ? -DEAD_ZONE_THRESHOLD : DEAD_ZONE_THRESHOLD)) * JOYSTICK_SCALE_FACTOR;
+    }
+
     int x = (int) constrain(ax * 16384 + 16384, 0, 32767);
     int y = (int) constrain(ay * 16384 + 16384, 0, 32767);
 
@@ -91,7 +103,7 @@ void transmitGamepadData(int redPressed, int greenPressed, int bluePressed, floa
 }
 
 void loop() {
-    delay(10);
+    delay(5);
 
     // get accelerometer readings
     float ax = acc.readFloatAccelX();
